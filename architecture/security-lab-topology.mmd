@@ -1,0 +1,22 @@
+flowchart TB
+    internet["Internet / NAT"]
+    firewall["pfSense Virtual Firewall"]
+    user["USER VLAN\n10.10.10.0/24"]
+    server["SERVER VLAN\n10.10.20.0/24"]
+    dmz["DMZ VLAN\n10.10.30.0/24"]
+    security["SECURITY VLAN\n10.10.40.0/24"]
+    mgmt["MGMT VLAN\n10.10.50.0/24"]
+
+    internet --> firewall
+    firewall --> user
+    firewall --> server
+    firewall --> dmz
+    firewall --> security
+    firewall --> mgmt
+
+    user -->|Wazuh agent telemetry| security
+    server -->|Syslog + Windows events| security
+    dmz -->|Reverse proxy logs| security
+    firewall -->|Firewall syslog| security
+    security -->|Analyst review| mgmt
+

@@ -1,0 +1,5 @@
+2026-05-01T09:14:22Z fw01 filterlog: action=pass src_zone=USER src_ip=10.10.10.21 dst_zone=SERVER dst_ip=10.10.20.15 proto=tcp dst_port=443 rule_id=FW-002
+2026-05-01T09:15:07Z fw01 filterlog: action=block src_zone=USER src_ip=10.10.10.31 dst_zone=SERVER dst_ip=10.10.20.15 proto=tcp dst_port=445 rule_id=FW-007
+2026-05-01T09:18:41Z fw01 filterlog: action=pass src_zone=SERVER src_ip=10.10.20.15 dst_zone=SECURITY dst_ip=10.10.40.10 proto=udp dst_port=514 rule_id=FW-004
+2026-05-01T09:21:11Z fw01 filterlog: action=block src_zone=DMZ src_ip=10.10.30.20 dst_zone=MGMT dst_ip=10.10.50.10 proto=tcp dst_port=3389 rule_id=FW-006
+

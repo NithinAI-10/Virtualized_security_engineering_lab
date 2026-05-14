@@ -1,0 +1,27 @@
+{
+  "title": "Virtual Security Lab Monitoring",
+  "description": "Synthetic dashboard layout for interview and documentation screenshots.",
+  "panels": [
+    {
+      "name": "Authentication Failures",
+      "type": "timeseries",
+      "query": "event_id:4625 OR event_name:\"Failed Logon\""
+    },
+    {
+      "name": "Firewall Denies By Zone",
+      "type": "bar",
+      "query": "action:block | group by src_zone,dst_zone"
+    },
+    {
+      "name": "IDS Alerts By Severity",
+      "type": "donut",
+      "query": "event_type:alert | group by alert.severity"
+    },
+    {
+      "name": "Endpoint Agent Health",
+      "type": "table",
+      "query": "agent_status:* | fields host,zone,last_seen,status"
+    }
+  ]
+}
+

@@ -1,0 +1,10 @@
+rule_id,source_zone,destination_zone,service,action,business_justification
+FW-001,MGMT,ANY,SSH/RDP,ALLOW,Administrative access from controlled management subnet
+FW-002,USER,SERVER,HTTPS,ALLOW,User access to internal application services
+FW-003,USER,SECURITY,Agent Telemetry,ALLOW,Endpoint log forwarding to SIEM
+FW-004,SERVER,SECURITY,Syslog,ALLOW,Server log forwarding to SIEM
+FW-005,DMZ,SECURITY,Syslog,ALLOW,Proxy and service log forwarding
+FW-006,ANY,MGMT,ANY,DENY,Prevent unauthorized management access
+FW-007,USER,SERVER,SMB,DENY,Reduce lateral movement exposure
+FW-008,ANY,ANY,ANY,DENY,Default deny rule for unapproved traffic
+

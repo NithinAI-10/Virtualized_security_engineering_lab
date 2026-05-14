@@ -1,0 +1,4 @@
+{"timestamp":"2026-05-01T09:02:13Z","host":"win11-user01","event_id":4624,"event_name":"Successful Logon","account":"student.user","logon_type":2,"source_ip":"127.0.0.1"}
+{"timestamp":"2026-05-01T09:05:44Z","host":"win11-user01","event_id":4625,"event_name":"Failed Logon","account":"lab.test","logon_type":2,"source_ip":"127.0.0.1","reason":"Unknown user name or bad password"}
+{"timestamp":"2026-05-01T09:17:25Z","host":"win11-user01","event_id":4688,"event_name":"Process Created","account":"student.user","process":"C:\\Windows\\System32\\whoami.exe","parent":"C:\\Windows\\explorer.exe"}
+

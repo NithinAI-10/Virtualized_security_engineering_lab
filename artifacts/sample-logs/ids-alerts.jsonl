@@ -1,0 +1,4 @@
+{"timestamp":"2026-05-01T09:22:11Z","sensor":"ids01","event_type":"alert","src_ip":"10.10.10.31","dest_ip":"10.10.30.20","proto":"TCP","alert":{"signature":"LAB Synthetic Policy Violation","category":"Policy","severity":2},"flow_id":100001}
+{"timestamp":"2026-05-01T09:29:33Z","sensor":"ids01","event_type":"dns","src_ip":"10.10.10.21","dest_ip":"10.10.20.53","query":"updates.example.local","rrtype":"A"}
+{"timestamp":"2026-05-01T09:31:02Z","sensor":"ids01","event_type":"alert","src_ip":"10.10.30.20","dest_ip":"10.10.40.10","proto":"TCP","alert":{"signature":"LAB Unexpected DMZ to Security Port","category":"Network Policy","severity":3},"flow_id":100002}
+
