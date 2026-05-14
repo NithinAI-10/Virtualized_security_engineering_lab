@@ -215,10 +215,6 @@ A security engineering team can use this type of lab to test logging pipelines, 
 - Built tested Python utilities to parse synthetic firewall logs, summarize IDS and Windows events, and support repeatable CI validation.
 - Added architecture decision records and an executive summary report to communicate technical decisions and business value.
 
-## LinkedIn Post Version
-
-I built a defensive virtual security engineering lab that models a small enterprise network with segmented zones, centralized logging, IDS telemetry, detection coverage mapping, and hardening validation. The project helped me practice how security engineers document architecture, justify controls, produce evidence that defensive controls are working, and explain alerts like a SOC analyst. The GitHub project includes topology diagrams, sample logs, firewall rules, dashboards, setup notes, tested parsing scripts, ATT&CK mapping, ADRs, and an interview-ready executive report.
-
 ## Interview Talking Points
 
 - Why segmentation matters and how default-deny rules reduce blast radius.
