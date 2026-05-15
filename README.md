@@ -144,19 +144,41 @@ Expected outputs include:
 
 ## Screenshots
 
-Add screenshots after building the lab:
+### GitHub Actions CI Validation
 
-| Screenshot | Placeholder |
-|------------|-------------|
-| Network topology | `screenshots/topology.png` |
-| Wazuh alert dashboard | `screenshots/wazuh-alerts.png` |
-| Suricata event view | `screenshots/suricata-events.png` |
-| Firewall rule table | `screenshots/firewall-rules.png` |
-| Hardening validation | `screenshots/hardening-validation.png` |
-| Detection coverage review | `screenshots/detection-coverage.png` |
-| Incident walkthrough timeline | `screenshots/incident-walkthrough.png` |
-| Executive summary report | `screenshots/executive-summary.png` |
-| CI results | `screenshots/ci-results.png` |
+Shows automated validation workflows successfully completing for Markdown checks, Python validation, secret scanning, and unit tests.
+
+![GitHub Actions](screenshots/github-actions.png)
+
+### Validation Script Execution
+
+Demonstrates successful execution of validation and security hygiene tooling.
+
+![Validation Scripts](screenshots/parser-output.png)
+
+### Detection Coverage Review
+
+Illustrates ATT&CK-oriented detection coverage documentation and telemetry mapping.
+
+![Detection Coverage](screenshots/detection-coverage.png)
+
+### SOC Incident Walkthrough
+
+Shows the structured investigation workflow for analyzing synthetic alerts and correlated telemetry.
+
+![Incident Walkthrough](screenshots/incident-walkthrough.png)
+
+### Firewall Validation
+
+Demonstrates segmented firewall policy enforcement and controlled traffic validation.
+
+![Firewall Rules](screenshots/firewall-rules.png)
+
+### SIEM Dashboard
+
+Displays centralized telemetry and alert monitoring within the virtual lab environment.
+
+![Wazuh Dashboard](screenshots/wazuh-alerts.png)
 
 ## Technical Explanation
 
@@ -233,4 +255,3 @@ See [`ROADMAP.md`](./ROADMAP.md) for the full roadmap. Near-term priorities are 
 ## Ethical Notice
 
 This project is designed for isolated lab learning. Do not run scans, collection agents, or network tests against systems you do not own or administer.
-
