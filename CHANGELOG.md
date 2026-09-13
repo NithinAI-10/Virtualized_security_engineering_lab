@@ -1,6 +1,24 @@
 # Changelog
 
-All notable changes to this defensive lab project are documented here.
+All notable changes to the **Virtualized Security Engineering, SOC & Incident Response Lab** are documented here.
+
+## [1.2.0] - 2026-09-13
+
+### Added
+
+- Recruiter-facing SOC and incident response positioning across the primary project documentation.
+- Expanded README sections for architecture, SOC workflow, investigation coverage, evidence, automation, control validation, and real-world relevance.
+- Clear evidence guidance distinguishing synthetic telemetry, documentation-rendered artifacts, and sanitized isolated-lab captures.
+- Updated portfolio roadmap with current completion state and future quality goals.
+
+### Improved
+
+- Renamed the project presentation from **Virtualized Security Engineering Lab** to **Virtualized Security Engineering, SOC & Incident Response Lab**.
+- Strengthened the executive summary to emphasize end-to-end defensive workflow: telemetry, triage, investigation, evidence, mitigation, and remediation validation.
+- Improved MITRE ATT&CK, detection engineering, SOC triage, and incident response framing without overstating what the available evidence proves.
+- Clarified portfolio screenshots and documentation so they do not imply production SOC or enterprise infrastructure ownership.
+- Aligned GitHub presentation with LinkedIn and resume positioning for SOC, security engineering, incident response, and detection-focused roles.
+- Updated roadmap priorities to focus on sanitized lab captures, additional telemetry, visualization, repeatable provisioning, and expanded detection scenarios.
 
 ## [1.1.0] - 2026-05-14
 
