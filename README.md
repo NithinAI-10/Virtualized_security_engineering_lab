@@ -1,30 +1,45 @@
-# Virtualized Security Engineering Lab
+# Virtualized Security Engineering, SOC & Incident Response Lab
 
 ![Track](https://img.shields.io/badge/track-security_engineering-blue)
-![Scope](https://img.shields.io/badge/scope-virtual_lab_only-green)
+![Focus](https://img.shields.io/badge/focus-SOC%20%7C%20incident_response%20%7C%20detection-purple)
+![Scope](https://img.shields.io/badge/scope-isolated_virtual_lab-green)
 ![Tools](https://img.shields.io/badge/tools-Wazuh%20%7C%20Suricata%20%7C%20pfSense-orange)
-![Status](https://img.shields.io/badge/status-interview_ready-brightgreen)
-![CI](https://img.shields.io/badge/ci-tests%20%7C%20markdown%20%7C%20secret_scan-blue)
+![CI](https://img.shields.io/badge/CI-tests%20%7C%20markdown%20%7C%20secret_scan-blue)
 
-## Executive Summary
+## Overview
 
-This project designs a segmented virtual enterprise security lab for practicing defensive engineering, telemetry collection, system hardening, detection coverage analysis, and control validation. The lab is built around a realistic small-business network model with user, server, DMZ, management, and security monitoring zones.
+This project is a segmented virtual enterprise security lab built to practice **security engineering, SOC monitoring, incident response, detection coverage analysis, network defense, and control validation** in an isolated environment. The architecture models a small enterprise using dedicated `USER`, `SERVER`, `DMZ`, `SECURITY`, and `MGMT` zones, with a virtual firewall controlling traffic between segments.
 
-The deliverables show how a security engineer can plan a lab, document architecture, collect evidence, write lightweight validation tooling, and explain layered controls without touching any unauthorized environment.
+The lab combines endpoint, network, firewall, and IDS telemetry with Python-based analysis utilities, ATT&CK-oriented detection documentation, CI validation, architecture decision records, and a repeatable incident-investigation workflow. The goal is not only to generate alerts, but to demonstrate how a security analyst or engineer can move from **telemetry -> investigation -> evidence -> mitigation -> validation**.
 
-## Architecture Diagram Description
+> **Project status:** Active and continuously improved. All testing and evidence are limited to an isolated lab environment. Synthetic sample telemetry is included so the analysis and validation workflow remains reproducible without touching unauthorized systems.
 
-The lab uses a virtual firewall as the control point between zones. Windows and Linux hosts forward logs to a Wazuh-style manager. A Suricata-style IDS sensor monitors mirrored lab traffic and produces synthetic alert evidence. Administrative access is isolated to a management subnet.
+## What This Project Demonstrates
+
+- Enterprise-style network segmentation and firewall policy design
+- Centralized security monitoring with Wazuh-oriented endpoint telemetry
+- Network detection using Suricata-oriented IDS evidence
+- SOC-style alert triage and incident investigation
+- Correlation of Windows, firewall, IDS, and network evidence
+- MITRE ATT&CK-oriented detection coverage analysis
+- Python automation for log parsing, normalization, and analyst workflows
+- Security hardening and control-validation documentation
+- Architecture Decision Records (ADRs) and stakeholder-ready reporting
+- GitHub Actions CI for tests, Python validation, Markdown checks, and secret scanning
+
+## Architecture
+
+The virtual firewall acts as the control point between network zones. Administrative activity is isolated to the management subnet, monitored systems forward security-relevant telemetry toward the security zone, and network controls restrict unnecessary east-west communication.
 
 ```mermaid
 flowchart TB
     internet["Internet / NAT"]
     firewall["pfSense Virtual Firewall"]
-    user["User VLAN\nWindows 11 + Ubuntu Client"]
-    server["Server VLAN\nLinux Web + Windows Server"]
+    user["USER VLAN\nWindows 11 + Ubuntu Client"]
+    server["SERVER VLAN\nLinux Web + Windows Server"]
     dmz["DMZ VLAN\nReverse Proxy + Test Service"]
-    security["Security VLAN\nWazuh + Suricata"]
-    mgmt["Management VLAN\nAdmin Workstation"]
+    security["SECURITY VLAN\nWazuh + Suricata"]
+    mgmt["MGMT VLAN\nAdmin Workstation"]
 
     internet --> firewall
     firewall --> user
@@ -39,89 +54,88 @@ flowchart TB
     firewall -->|firewall events| security
 ```
 
-## Folder Structure
+### Zone Purpose
 
-```text
-01-virtualized-security-engineering-lab/
-|-- .github/workflows/ci.yml
-|-- .gitignore
-|-- CHANGELOG.md
-|-- CONTRIBUTING.md
-|-- README.md
-|-- ROADMAP.md
-|-- requirements.txt
-|-- architecture/
-|   `-- security-lab-topology.mmd
-|-- artifacts/
-|   |-- sample-logs/
-|   |   |-- firewall.log
-|   |   |-- ids-alerts.jsonl
-|   |   `-- windows-security-events.jsonl
-|   `-- sample-reports/
-|       |-- lab-asset-inventory.md
-|       `-- lab-validation-report.md
-|-- configs/
-|   |-- firewall-rules.csv
-|   |-- suricata-lab.yaml
-|   `-- wazuh-agent.conf
-|-- dashboards/
-|   `-- security-lab-dashboard.json
-|-- docs/
-|   |-- architecture-decisions/
-|   |   |-- ADR-0001-segmented-virtual-network.md
-|   |   |-- ADR-0002-synthetic-telemetry.md
-|   |   |-- ADR-0003-standard-library-automation.md
-|   |   `-- README.md
-|   |-- detection-coverage.md
-|   |-- hardening-checklist.md
-|   |-- incident-walkthrough.md
-|   |-- lab-runbook.md
-|   `-- setup-guide.md
-|-- reports/
-|   `-- executive-summary.md
-|-- screenshots/
-|   `-- README.md
-|-- scripts/
-|   |-- generate_lab_inventory.py
-|   |-- parse_firewall_logs.py
-|   |-- secret_scan.py
-|   |-- summarize_security_events.py
-|   |-- validate_markdown.py
-|   `-- validate_python_syntax.py
-`-- tests/
-    |-- test_firewall_parser.py
-    |-- test_security_event_summary.py
-    `-- test_validation_helpers.py
-```
+| Zone | Purpose |
+|---|---|
+| `USER` | Represents employee/client endpoints and normal user activity |
+| `SERVER` | Hosts internal services and server-side authentication/system telemetry |
+| `DMZ` | Contains externally exposed test services separated from the internal network |
+| `SECURITY` | Centralizes monitoring, IDS evidence, analyst tooling, and security telemetry |
+| `MGMT` | Restricts administrative access to a dedicated management segment |
 
-## Documentation Index
+## SOC & Incident Response Workflow
 
-| Document | Purpose |
-|----------|---------|
-| [`reports/executive-summary.md`](./reports/executive-summary.md) | Stakeholder-level summary of business value, controls, results, and limitations |
-| [`docs/setup-guide.md`](./docs/setup-guide.md) | Local lab build and validation steps |
-| [`docs/lab-runbook.md`](./docs/lab-runbook.md) | Daily operating workflow and analyst review process |
-| [`docs/detection-coverage.md`](./docs/detection-coverage.md) | MITRE ATT&CK-oriented mapping of synthetic events to detection themes |
-| [`docs/incident-walkthrough.md`](./docs/incident-walkthrough.md) | SOC-style investigation using the sample telemetry |
-| [`docs/hardening-checklist.md`](./docs/hardening-checklist.md) | Defensive baseline for hosts, logging, and access control |
-| [`docs/architecture-decisions/`](./docs/architecture-decisions/README.md) | Architecture Decision Records explaining key design choices |
-| [`ROADMAP.md`](./ROADMAP.md) | Completed work and future improvement plan |
-| [`CHANGELOG.md`](./CHANGELOG.md) | Versioned project history |
+The lab follows a repeatable investigation process designed to mirror entry-level enterprise SOC operations:
 
-## Setup Instructions
+1. **Monitor** endpoint, IDS, firewall, and network telemetry.
+2. **Triage** alerts based on source, severity, affected asset, and observed behavior.
+3. **Correlate** related events across Windows, firewall, IDS, and packet-level evidence.
+4. **Map** relevant activity to MITRE ATT&CK where the evidence supports the mapping.
+5. **Investigate** the timeline, source/destination context, authentication activity, and network behavior.
+6. **Recommend mitigation** such as access restrictions, segmentation changes, hardening, or additional monitoring.
+7. **Validate remediation** using controlled lab testing and documented evidence.
+8. **Document** the incident, findings, limitations, and follow-up actions.
 
-1. Install a local hypervisor such as VirtualBox, VMware Workstation, Proxmox, or Hyper-V.
-2. Create virtual networks for `USER`, `SERVER`, `DMZ`, `SECURITY`, and `MGMT`.
-3. Deploy a virtual firewall and configure default-deny inter-VLAN rules.
-4. Deploy one Windows endpoint, one Linux endpoint, and one Linux security monitoring host.
-5. Configure endpoint log forwarding to the Wazuh manager.
-6. Place the IDS sensor on the lab monitoring interface.
-7. Import the sample dashboard structure from [`dashboards/security-lab-dashboard.json`](./dashboards/security-lab-dashboard.json).
-8. Use synthetic test events only; do not scan or test systems outside the isolated lab.
+See [`docs/incident-walkthrough.md`](./docs/incident-walkthrough.md) for the detailed investigation workflow.
 
-## Analyst Utility Commands
+## Evidence & Screenshots
 
-Run these commands from the project root:
+### SIEM / Centralized Monitoring
+
+![Wazuh Dashboard](screenshots/wazuh-alerts.png)
+
+Centralized security telemetry and alert-monitoring view used to support analyst review and triage.
+
+### SOC Incident Walkthrough
+
+![Incident Walkthrough](screenshots/incident-walkthrough.png)
+
+Structured investigation workflow showing how multiple evidence sources are reviewed and correlated.
+
+### Detection Coverage
+
+![Detection Coverage](screenshots/detection-coverage.png)
+
+ATT&CK-oriented detection documentation connecting available telemetry to defensive coverage themes.
+
+### Firewall / Segmentation Validation
+
+![Firewall Rules](screenshots/firewall-rules.png)
+
+Validation of segmented firewall policy and controlled communication paths between lab zones.
+
+### Security Automation Output
+
+![Validation Scripts](screenshots/parser-output.png)
+
+Python-based validation and evidence-processing utilities used to summarize security data.
+
+### CI Validation
+
+![GitHub Actions](screenshots/github-actions.png)
+
+GitHub Actions workflow validating Python, tests, Markdown, secret scanning, and sample-evidence processing.
+
+## Detection & Investigation Coverage
+
+The lab includes sample scenarios and evidence supporting analysis of:
+
+- authentication anomalies
+- denied or unexpected network flows
+- reconnaissance and scanning behavior
+- IDS alert review and severity analysis
+- Windows security event correlation
+- firewall rule hits and blocked communication
+- endpoint and network telemetry correlation
+- segmentation-control validation
+- remediation verification
+
+The project intentionally distinguishes between what the available evidence **shows** and what it merely **suggests**, avoiding unsupported conclusions during ATT&CK mapping or incident analysis.
+
+## Python Security Automation
+
+The repository includes lightweight analyst utilities for parsing and summarizing evidence:
 
 ```bash
 python scripts/parse_firewall_logs.py
@@ -133,125 +147,124 @@ python scripts/validate_markdown.py .
 python scripts/secret_scan.py .
 ```
 
-Expected outputs include:
+These workflows support:
 
-- firewall action counts, rule hits, and denied flow summaries
-- IDS alert signature and severity counts
+- firewall action counts and rule-hit summaries
+- denied-flow analysis
+- IDS signature and severity summaries
 - Windows event ID and account summaries
-- a normalized analyst timeline from IDS and Windows events
-- regenerated asset inventory documentation
-- unit test results for the Python helpers
+- normalized analyst timelines
+- repeatable asset-inventory generation
+- documentation and code-quality validation
 
-## Screenshots
+## Security Controls Demonstrated
 
-### GitHub Actions CI Validation
+| Security Area | Implementation / Evidence |
+|---|---|
+| Network segmentation | Dedicated virtual zones with firewall-controlled communication |
+| Least privilege | Administrative access isolated to the `MGMT` network |
+| Centralized logging | Windows, firewall, and IDS sample telemetry |
+| Detection engineering | IDS evidence, dashboard structures, and coverage documentation |
+| ATT&CK mapping | Detection notes in [`docs/detection-coverage.md`](./docs/detection-coverage.md) |
+| SOC triage | Investigation workflow in [`docs/incident-walkthrough.md`](./docs/incident-walkthrough.md) |
+| System hardening | Defensive baseline in [`docs/hardening-checklist.md`](./docs/hardening-checklist.md) |
+| Control validation | Evidence-based validation and remediation documentation |
+| Architecture governance | ADRs explaining design decisions and tradeoffs |
+| CI security hygiene | Unit tests, Python validation, Markdown checks, and secret scanning |
 
-Shows automated validation workflows successfully completing for Markdown checks, Python validation, secret scanning, and unit tests.
+## Technology Stack
 
-![GitHub Actions](screenshots/github-actions.png)
+**Security & Monitoring:** Wazuh, Suricata, pfSense/OPNsense concepts, Windows Event telemetry, Linux syslog/audit concepts  
+**Networking:** TCP/IP, VLAN segmentation, firewall policy, network zones, packet analysis  
+**Automation:** Python 3, JSON, JSONL, CSV, YAML  
+**Engineering:** Git, GitHub Actions, unit testing, Markdown validation, secret scanning  
+**Frameworks / Practices:** MITRE ATT&CK, incident response, detection coverage, hardening, least privilege, evidence-based validation
 
-### Validation Script Execution
+## Repository Structure
 
-Demonstrates successful execution of validation and security hygiene tooling.
+```text
+Virtualized_security_engineering_lab/
+|-- .github/workflows/ci.yml
+|-- README.md
+|-- ROADMAP.md
+|-- CHANGELOG.md
+|-- architecture/
+|   `-- security-lab-topology.mmd
+|-- artifacts/
+|   |-- sample-logs/
+|   `-- sample-reports/
+|-- configs/
+|   |-- firewall-rules.csv
+|   |-- suricata-lab.yaml
+|   `-- wazuh-agent.conf
+|-- dashboards/
+|   `-- security-lab-dashboard.json
+|-- docs/
+|   |-- architecture-decisions/
+|   |-- detection-coverage.md
+|   |-- hardening-checklist.md
+|   |-- incident-walkthrough.md
+|   |-- lab-runbook.md
+|   `-- setup-guide.md
+|-- reports/
+|   `-- executive-summary.md
+|-- screenshots/
+|-- scripts/
+`-- tests/
+```
 
-![Validation Scripts](screenshots/parser-output.png)
+## Documentation
 
-### Detection Coverage Review
+| Document | Purpose |
+|---|---|
+| [`reports/executive-summary.md`](./reports/executive-summary.md) | Stakeholder-level summary of business value, controls, results, and limitations |
+| [`docs/setup-guide.md`](./docs/setup-guide.md) | Lab build and validation steps |
+| [`docs/lab-runbook.md`](./docs/lab-runbook.md) | Analyst operating workflow |
+| [`docs/detection-coverage.md`](./docs/detection-coverage.md) | ATT&CK-oriented detection coverage |
+| [`docs/incident-walkthrough.md`](./docs/incident-walkthrough.md) | SOC-style investigation walkthrough |
+| [`docs/hardening-checklist.md`](./docs/hardening-checklist.md) | Host, logging, and access-control baseline |
+| [`docs/architecture-decisions/`](./docs/architecture-decisions/README.md) | Architecture Decision Records |
+| [`ROADMAP.md`](./ROADMAP.md) | Current and planned improvements |
+| [`CHANGELOG.md`](./CHANGELOG.md) | Versioned project history |
 
-Illustrates ATT&CK-oriented detection coverage documentation and telemetry mapping.
+## Setup
 
-![Detection Coverage](screenshots/detection-coverage.png)
+1. Install a local hypervisor such as VirtualBox, VMware Workstation, Proxmox, or Hyper-V.
+2. Create isolated virtual networks for `USER`, `SERVER`, `DMZ`, `SECURITY`, and `MGMT`.
+3. Deploy a virtual firewall and configure default-deny inter-zone rules.
+4. Deploy Windows and Linux lab endpoints plus a security-monitoring host.
+5. Configure endpoint telemetry/log forwarding toward the security-monitoring environment.
+6. Place the IDS sensor on the designated monitoring interface.
+7. Import the sample dashboard structure from [`dashboards/security-lab-dashboard.json`](./dashboards/security-lab-dashboard.json).
+8. Generate only controlled or synthetic events inside the isolated lab.
+9. Run the Python validation and analysis utilities to verify evidence-processing workflows.
 
-### SOC Incident Walkthrough
+## CI / Engineering Quality
 
-Shows the structured investigation workflow for analyzing synthetic alerts and correlated telemetry.
+The GitHub Actions workflow automatically:
 
-![Incident Walkthrough](screenshots/incident-walkthrough.png)
+- validates Python syntax
+- runs the unit-test suite
+- checks Markdown formatting
+- performs a basic secret scan
+- parses sample firewall evidence
+- summarizes IDS and Windows events
+- regenerates the lab asset inventory
 
-### Firewall Validation
+See [`.github/workflows/ci.yml`](./.github/workflows/ci.yml) for the complete pipeline.
 
-Demonstrates segmented firewall policy enforcement and controlled traffic validation.
+## Real-World Relevance
 
-![Firewall Rules](screenshots/firewall-rules.png)
+A lab like this can be used to safely rehearse security-engineering and SOC activities before applying similar concepts in production. It demonstrates how segmentation, centralized logging, endpoint telemetry, network detection, security automation, and structured incident response work together as layered defenses.
 
-### SIEM Dashboard
+The project is intentionally designed to be explainable to both technical and non-technical audiences: architecture decisions are documented, controls have stated purposes, evidence is reproducible, and findings can be translated into remediation actions and stakeholder-level summaries.
 
-Displays centralized telemetry and alert monitoring within the virtual lab environment.
+## Current Roadmap
 
-![Wazuh Dashboard](screenshots/wazuh-alerts.png)
+Ongoing improvements include expanding Linux authentication telemetry, adding DMZ web/proxy evidence, improving generated visualizations, increasing detection scenarios, and continuing to replace synthetic examples with sanitized evidence captured from the isolated lab where appropriate.
 
-## Technical Explanation
+See [`ROADMAP.md`](./ROADMAP.md) for details.
 
-This lab demonstrates layered defensive architecture. The firewall enforces segmentation, endpoint agents collect host-level telemetry, network sensors provide visibility into traffic patterns, and the SIEM centralizes alerting. The lab is intentionally small enough to run on a student workstation while still reflecting enterprise principles: zone separation, centralized monitoring, asset inventory, baseline hardening, detection coverage mapping, tested evidence parsers, and validation reporting.
+## Ethical & Authorized Use
 
-## Security Concepts Demonstrated
-
-| Concept | Evidence |
-|---------|----------|
-| Network segmentation | Dedicated virtual zones and firewall rule baseline |
-| Least privilege | Management access isolated to the `MGMT` subnet |
-| Centralized logging | Synthetic Windows, firewall, and IDS logs |
-| Detection engineering | IDS alert examples and dashboard fields |
-| ATT&CK mapping | Detection coverage notes in `docs/detection-coverage.md` |
-| SOC triage | Investigation walkthrough in `docs/incident-walkthrough.md` |
-| Hardening | Baseline checklist mapped to host and network controls |
-| Control validation | Lab validation report with findings and remediation notes |
-| Architecture governance | ADRs documenting key design decisions |
-| CI hygiene | Unit tests, Markdown validation, Python syntax checks, and basic secret scanning |
-
-## Tools And Technologies
-
-- pfSense or OPNsense
-- Wazuh
-- Suricata
-- Windows Event Forwarding concepts
-- Linux audit and syslog
-- Python 3 standard library
-- GitHub Actions
-- Markdown, Mermaid, JSON, JSONL, CSV, YAML
-
-## Key Features
-
-- Enterprise-style segmented lab topology
-- SIEM and IDS evidence artifacts
-- Firewall baseline with business justification
-- Host hardening checklist
-- Validation report and executive summary
-- Inventory generator script for documentation hygiene
-- Defensive parsing scripts for firewall, IDS, and Windows evidence
-- Unit tests for Python evidence-processing helpers
-- ATT&CK-oriented detection coverage matrix
-- SOC-style incident walkthrough
-- Architecture decision records, roadmap, and changelog
-- GitHub Actions workflow for tests, documentation, Python, and secret-scan validation
-
-## Real-World Use Case
-
-A security engineering team can use this type of lab to test logging pipelines, validate segmentation, train junior analysts, evaluate detection coverage, and safely rehearse incident response workflows before applying changes in production.
-
-## Resume Bullet Points
-
-- Designed a segmented virtual security engineering lab with firewall-controlled `USER`, `SERVER`, `DMZ`, `SECURITY`, and `MGMT` zones.
-- Implemented centralized telemetry examples using Wazuh-style endpoint logs, Suricata-style IDS alerts, and firewall event samples.
-- Created security hardening, network rule, ATT&CK mapping, and validation documentation to demonstrate control design and evidence-based remediation.
-- Built tested Python utilities to parse synthetic firewall logs, summarize IDS and Windows events, and support repeatable CI validation.
-- Added architecture decision records and an executive summary report to communicate technical decisions and business value.
-
-## Interview Talking Points
-
-- Why segmentation matters and how default-deny rules reduce blast radius.
-- How endpoint telemetry and network telemetry complement each other.
-- How to explain a lab architecture to both technical and non-technical audiences.
-- How to validate that controls are working using synthetic evidence.
-- How to map telemetry to MITRE ATT&CK without overstating what the evidence proves.
-- How to walk through a SOC investigation using endpoint, firewall, and IDS data.
-- Why architecture decision records improve technical communication.
-- What tradeoffs exist when building a realistic lab on limited hardware.
-
-## Future Improvement Roadmap
-
-See [`ROADMAP.md`](./ROADMAP.md) for the full roadmap. Near-term priorities are real isolated-lab screenshots, generated charts from parser output, Linux authentication samples, and web proxy logs from the DMZ.
-
-## Ethical Notice
-
-This project is designed for isolated lab learning. Do not run scans, collection agents, or network tests against systems you do not own or administer.
+This project is strictly for defensive learning in systems that are owned, controlled, or explicitly authorized for testing. Do not deploy scanners, agents, traffic-generation tools, or security tests against systems without permission.
